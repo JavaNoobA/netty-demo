@@ -1,7 +1,11 @@
 package com.eru.netty.client;
 
+import com.eru.netty.codec.PacketDecoder;
+import com.eru.netty.codec.PacketEncoder;
 import com.eru.netty.protocol.PacketCodeC;
 import com.eru.netty.protocol.request.MessageRequestPacket;
+import com.eru.netty.server.handler.LoginRequestHandler;
+import com.eru.netty.server.handler.MessageRequestHandler;
 import com.eru.netty.util.LoginUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -44,7 +48,10 @@ public class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(new ClientHandler());
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginRequestHandler());
+                        ch.pipeline().addLast(new MessageRequestHandler());
+                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
         connect(bootstrap, HOST, PORT, MAX_RETRY);

@@ -1,11 +1,9 @@
 package com.eru.netty.server;
 
-import com.eru.netty.server.inbound.InboundHandlerA;
-import com.eru.netty.server.inbound.InboundHandlerB;
-import com.eru.netty.server.inbound.InboundHandlerC;
-import com.eru.netty.server.outbound.OutboundHandlerA;
-import com.eru.netty.server.outbound.OutboundHandlerB;
-import com.eru.netty.server.outbound.OutboundHandlerC;
+import com.eru.netty.codec.PacketDecoder;
+import com.eru.netty.codec.PacketEncoder;
+import com.eru.netty.server.handler.LoginRequestHandler;
+import com.eru.netty.server.handler.MessageRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -37,13 +35,10 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) {
-                        ch.pipeline().addLast(new InboundHandlerA());
-                        ch.pipeline().addLast(new InboundHandlerB());
-                        ch.pipeline().addLast(new InboundHandlerC());
-
-                        ch.pipeline().addLast(new OutboundHandlerA());
-                        ch.pipeline().addLast(new OutboundHandlerB());
-                        ch.pipeline().addLast(new OutboundHandlerC());
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginRequestHandler());
+                        ch.pipeline().addLast(new MessageRequestHandler());
+                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
         bind(bootstrap, BEGIN_PORT);
