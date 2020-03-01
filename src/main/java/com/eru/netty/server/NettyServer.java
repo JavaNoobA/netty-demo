@@ -1,4 +1,4 @@
-package com.eru.netty;
+package com.eru.netty.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -33,10 +33,10 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) {
-                        System.out.println(ch.attr(clientKey).get());
+                        ch.pipeline().addLast(new FirstServerHandler());
                     }
                 });
-        bind(bootstrap, 3306);
+        bind(bootstrap, BEGIN_PORT);
     }
 
     public static void bind(ServerBootstrap bootstrap, final int port){
