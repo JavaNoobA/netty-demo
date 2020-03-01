@@ -1,5 +1,6 @@
 package com.eru.netty.protocol;
 
+import com.eru.netty.protocol.request.LoginRequestPacket;
 import com.eru.netty.serialize.Serializer;
 import com.eru.netty.serialize.impl.JSONSerializer;
 import io.netty.buffer.ByteBuf;
@@ -14,6 +15,7 @@ import static com.eru.netty.protocol.command.Command.LOGIN_REQUEST;
  * Created by eru on 2020/3/1.
  */
 public class PacketCodeC {
+    public static final PacketCodeC INSTANCE = new PacketCodeC();
     private static final int MAGIC_NUMBER = 0x12345678;
     private static final Map<Byte, Class<? extends Packet>> packetTypeMap;
     private static final Map<Byte, Serializer> serializerMap;
@@ -27,9 +29,9 @@ public class PacketCodeC {
         serializerMap.put(serializer.getSerializerAlogrithm(), serializer);
     }
 
-    public ByteBuf encode(Packet packet){
+    public ByteBuf encode(ByteBufAllocator byteBufAllocator, Packet packet){
         // 1. 创建buf对象
-        ByteBuf buf = ByteBufAllocator.DEFAULT.ioBuffer();
+        ByteBuf buf = byteBufAllocator.ioBuffer();
         // 2. 序列化java对象
         byte[] bytes = Serializer.DEFAULT.serialize(packet);
 

@@ -1,5 +1,6 @@
-package com.eru.netty.protocol;
+package com.eru.netty.protocol.request;
 
+import com.eru.netty.protocol.Packet;
 import lombok.Data;
 
 import static com.eru.netty.protocol.command.Command.LOGIN_REQUEST;
@@ -9,7 +10,7 @@ import static com.eru.netty.protocol.command.Command.LOGIN_REQUEST;
  */
 @Data
 public class LoginRequestPacket extends Packet {
-    private Integer userId;
+    private String userId;
 
     private String username;
 
